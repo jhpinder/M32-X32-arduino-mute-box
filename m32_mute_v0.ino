@@ -62,11 +62,10 @@ void handleCC(byte channel, byte faderNumber, byte muteState) {
   if (faderNumber < 0 || faderNumber > 15 || faderLookup[faderNumber] < 0) {
     return;
   }
-  if (muteState < MIN_MUTE_VAL) {
-    localLedState[faderLookup[faderNumber] - 1] = LOW;
-  } else {
-    localLedState[faderLookup[faderNumber] - 1] = HIGH;
+  if (muteState > 127 || muteState < 0) {
+    return;
   }
+  localLedState[faderLookup[faderNumber]] = muteState < MIN_MUTE_VAL ? LOW : HIGH;
 }
 
 void sendInitialMutes() {
