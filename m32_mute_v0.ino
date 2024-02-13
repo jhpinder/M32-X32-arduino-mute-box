@@ -16,23 +16,56 @@ byte currentSwitchState[8] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 byte lastSwitchState[8] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 
 void setup() {
+  MIDI.setHandleControlChange(handleCC);
   MIDI.begin(MUTE_CHANNEL);
   MIDI.turnThruOff();
-  MIDI.setHandleControlChange(handleCC);
-  
+
   for (int i = 0; i < 8; i++) {
     pinMode(inputPins[i], INPUT_PULLUP);
     pinMode(outputPins[i], OUTPUT);
+    digitalWrite(outputPins[i], localLedState[i]);
   }
 
-  delay(10000);
-  sendInitialMutes();
+  pinMode(13, INPUT_PULLUP);
+  if (digitalRead(13) == LOW) { // if the button is on, send mutes after init
+
+    // turn on and off LEDs one by one on startup
+    digitalWrite(outputPins[0], HIGH);
+    for (int i = 1; i < 8; i++) {
+      delay(1200);
+      digitalWrite(outputPins[i - 1], LOW);
+      delay(50);
+      digitalWrite(outputPins[i], HIGH);
+    }
+    delay(1200);
+    digitalWrite(outputPins[7], LOW);
+    delay(50);
+
+    // set all LEDs to on
+    for (int i = 0; i < 8; i++) {
+      localLedState[i] = HIGH;
+    }
+    updateLEDs();
+
+    // send mute to all channels that the box controls to sync
+    sendInitialMutes();
+  } else {
+    digitalWrite(outputPins[0], HIGH);
+    for (int i = 1; i < 8; i++) {
+      delay(60);
+      digitalWrite(outputPins[i], HIGH);
+      digitalWrite(outputPins[i - 1], LOW);
+    }
+    delay(60);
+    digitalWrite(outputPins[7], LOW);
+  }
 }
 
 void loop() {
+  MIDI.read();
   checkSwitches();
   updateLEDs();
-  delay(20);
+  delay(5);
 }
 
 void updateLEDs() {
@@ -73,4 +106,3 @@ void sendInitialMutes() {
     MIDI.sendControlChange(outputFaderNumberLookup[i], MUTE_ON, MUTE_CHANNEL);
   }
 }
-
