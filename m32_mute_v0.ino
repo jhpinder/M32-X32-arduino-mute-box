@@ -8,8 +8,8 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 
 int inputPins[8] = {38, 40, 42, 44, 46, 48, 50, 52};
 int outputPins[8] = {39, 41, 43, 45, 47, 49, 51, 53};
-int faderLookup[16] = {0, 1, 2, 3, 4, 5, 6, -1, -1, -1, 7, -1, -1, -1, -1, -1}; // indexes to the corresponding local mute numbers
-int outputFaderNumberLookup[8] = {0, 1, 2, 3, 4, 5, 6, 10};
+int faderLookup[17] = {0, 1, 2, 3, 4, 5, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7}; // indexes to the corresponding local mute numbers
+int outputFaderNumberLookup[8] = {0, 1, 2, 3, 4, 5, 6, 16};
 
 byte localLedState[8] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
 byte currentSwitchState[8] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
@@ -92,7 +92,7 @@ void handleCC(byte channel, byte faderNumber, byte muteState) {
   if (channel != MUTE_CHANNEL) {
     return;
   }
-  if (faderNumber < 0 || faderNumber > 15 || faderLookup[faderNumber] < 0) {
+  if (faderNumber < 0 || faderNumber > 16 || faderLookup[faderNumber] < 0) {
     return;
   }
   if (muteState > 127 || muteState < 0) {
