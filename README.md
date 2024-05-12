@@ -3,10 +3,10 @@
 This is a project that facilitates an eight channel "mute box" that communicates over MIDI to the M32 or X32 console.
 It is meant to be an easy way for individuals with little to no audio engineering experience to operate the mute/unmute functions during a worship service.
 
-`faderLookup` is an array representing the console faders 1-16 and maps which of those will control which local mute light.  
+`faderLookup` is an array representing the console faders 1-17 and maps which of those will control which local mute light.  
 `outputFaderNumberLookup` is an array representing which console fader will be muted when the local mute buttons are pressed.  
 
-Currently this is only set up to control channels 1-16 but could easily be expanded by increasing the size of `faderLookup`.
+Currently this is only set up to control channels 1-17 but could easily be expanded by increasing the size of `faderLookup`.
 
 <br>
 
